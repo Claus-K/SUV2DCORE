@@ -29,13 +29,11 @@ namespace UnitSelection
         {
             int id = go.GetInstanceID();
 
-            if (!(selectUnits.ContainsKey(id)))
-            {
-                selectUnits.Add(id, go);
-                // add effect of selected here
-                go.GetComponent<SpriteRenderer>().color = Color.red;
-                Debug.Log("Added " + id + " to selected units.");
-            }
+            if (selectUnits.ContainsKey(id)) return;
+            selectUnits.Add(id, go);
+            // add effect of selected here
+            go.GetComponent<SpriteRenderer>().color = Color.red;
+            Debug.Log("Added " + id + " to selected units.");
         }
 
         public void Deselect(int id)

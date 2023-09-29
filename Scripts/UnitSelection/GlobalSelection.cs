@@ -1,112 +1,95 @@
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
 
 namespace UnitSelection
 {
     public class GlobalSelection : MonoBehaviour
     {
-        private bool isSelecting = false;
         private Vector3 startMousePosition;
-        public LayerMask unitLayerMask; // Assign this in the inspector to select only units.
-        public RectTransform selectionBox; // UI element for the selection box (optional)
-
         private UnityEngine.Camera _camera;
+        private bool drawBox;
+        private bool isShiftPressed;
 
         void Start()
         {
             _camera = UnityEngine.Camera.main;
+            if (_camera == null)
+            {
+                Debug.LogError("Main Camera not Found!");
+            }
         }
 
         private void Update()
         {
-            HandleMouseInput();
-        }
-
-        private void HandleMouseInput()
-        {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                isSelecting = true;
-                startMousePosition = Input.mousePosition;
-
-                if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift))
+                isShiftPressed = true;
+                if (Input.GetMouseButtonDown(0))
                 {
-                    DeselectAllUnits();
+                    startMousePosition = Input.mousePosition;
+                }
+                if (Input.GetMouseButton(0))
+                {
+                    drawBox = true;
+                    SelectUnitBox();
                 }
             }
-
-            if (Input.GetMouseButtonUp(0))
+            else if (isShiftPressed && !Input.GetKey(KeyCode.LeftShift))
             {
-                isSelecting = false;
-
-                if (Vector3.Distance(startMousePosition, Input.mousePosition) > 5)
-                {
-                    SelectUnitsInDragArea();
-                }
-                else
-                {
-                    SelectSingleUnitUnderMouse();
-                }
-
-                if (selectionBox) selectionBox.gameObject.SetActive(false);
+                drawBox = false;
+                isShiftPressed = false;
             }
 
-            if (isSelecting && selectionBox)
+            if (Input.GetMouseButton(0) && !isShiftPressed)
             {
-                UpdateSelectionBox();
+                SelectUnitUnder();
             }
         }
 
-        private void DeselectAllUnits()
+        private void SelectUnitUnder()
         {
-            SelectDictionary.Instance.DeselectAll();
-        }
+            Vector2 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
-        private void SelectUnitsInDragArea()
-        {
-            Vector3 lowerLeft = _camera.ScreenToWorldPoint(new Vector3(
-                Mathf.Min(startMousePosition.x, Input.mousePosition.x),
-                Mathf.Min(startMousePosition.y, Input.mousePosition.y), _camera.nearClipPlane));
-            Vector3 upperRight = _camera.ScreenToWorldPoint(new Vector3(
-                Mathf.Max(startMousePosition.x, Input.mousePosition.x),
-                Mathf.Max(startMousePosition.y, Input.mousePosition.y), _camera.nearClipPlane));
-
-            foreach (GameObject unit in GameObject.FindGameObjectsWithTag("Player"))
+            if (hit.collider != null &&
+                hit.collider.gameObject.CompareTag("Player")) // Check if the raycast hit something
             {
-                if (unit.transform.position.x > lowerLeft.x && unit.transform.position.x < upperRight.x &&
-                    unit.transform.position.y > lowerLeft.y && unit.transform.position.y < upperRight.y)
+                // Debug.Log("Raycast hit: " + hit.collider.gameObject.name); // Display name of hit object
+
+                if (hit.collider.CompareTag("Player"))
                 {
-                    SelectUnit(unit);
+                    SelectDictionary.Instance.AddSelected(hit.collider.gameObject);
                 }
             }
-        }
-
-        private void SelectSingleUnitUnderMouse()
-        {
-            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, unitLayerMask))
+            else
             {
-                SelectUnit(hit.collider.gameObject);
+                SelectDictionary.Instance.DeselectAll();
+                // Debug.Log("Raycast did not hit a valid object.");
             }
         }
-
-        private void SelectUnit(GameObject unit)
+        
+        private void OnGUI()
         {
-            if (!SelectDictionary.Instance.selectUnits.ContainsValue(unit))
-            {
-                SelectDictionary.Instance.AddSelected(unit);
-            }
+            if (!drawBox) return;
+            // Debug.Log("GUI DRAWING");
+            Rect screenRect = Utils.GetScreenRect(startMousePosition, Input.mousePosition);
+            Utils.DrawScreenRect(screenRect, new Color(0.8f, 0.8f, 0.95f, 0.25f));
+            Utils.DrawScreenRectBorder(screenRect, 2, Color.blue);
         }
 
-        private void UpdateSelectionBox()
+        private void SelectUnitBox()
         {
-            float width = Input.mousePosition.x - startMousePosition.x;
-            float height = Input.mousePosition.y - startMousePosition.y;
+            Vector2 boxStart = _camera.ScreenToWorldPoint(startMousePosition);
+            Vector2 boxEnd = _camera.ScreenToWorldPoint(Input.mousePosition);
 
-            selectionBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
-            selectionBox.anchoredPosition = startMousePosition + new Vector3(width / 2, height / 2);
+            Vector2 boxCenter = (boxStart + boxEnd) / 2;
+            Vector2 boxSize = new Vector2(Mathf.Abs(boxEnd.x - boxStart.x), Mathf.Abs(boxEnd.y - boxStart.y));
+
+            Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, 0);
+            foreach (var hit in hits.Where(hit =>hit.CompareTag("Player")))
+            {
+                SelectDictionary.Instance.AddSelected(hit.gameObject);
+            }
         }
     }
 }
