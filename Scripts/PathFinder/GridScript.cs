@@ -13,6 +13,7 @@ namespace PathFinder
         private int[,] gridArray;
         public TextMesh textMeshPrefab;
         private TextMesh[,] _textMeshes;
+        public bool drawGrid; 
 
         public void Initialize(int width, int height, float cellSize)
         {
@@ -21,7 +22,11 @@ namespace PathFinder
             this.cellSize = cellSize;
             gridArray = new int[this.width, this.height];
             // textMeshPrefab.characterSize = Mathf.Max(this.cellSize / 2, 0.1f);
-            DrawGrid();
+            if (drawGrid)
+            {
+                DrawGrid();
+            }
+            
             SetValue(2, 1, 56);
         }
 
@@ -32,11 +37,11 @@ namespace PathFinder
             {
                 for (int y = 0; y < gridArray.GetLength(1); y++)
                 {
-                    _textMeshes[x, y] = Instantiate(textMeshPrefab,
-                        GetWorldPosition(x, y) + new Vector3(cellSize / 2, cellSize / 2), Quaternion.identity,
-                        this.transform);
-                    _textMeshes[x, y].text = gridArray[x, y].ToString();
-                    _textMeshes[x, y].characterSize = Mathf.Max(cellSize / 2, 0.1f);
+                    // _textMeshes[x, y] = Instantiate(textMeshPrefab,
+                    //     GetWorldPosition(x, y) + new Vector3(cellSize / 2, cellSize / 2), Quaternion.identity,
+                    //     this.transform);
+                    // _textMeshes[x, y].text = gridArray[x, y].ToString();
+                    // _textMeshes[x, y].characterSize = Mathf.Max(cellSize / 2, 0.1f);
                     Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.red, 100f);
                     Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.green, 100f);
                 }
@@ -62,7 +67,7 @@ namespace PathFinder
             if (x >= 0 && y >= 0 && width > x && height > y)
             {
                 gridArray[x, y] = value;
-                _textMeshes[x, y].text = value.ToString();
+                // _textMeshes[x, y].text = value.ToString();
             }
         }
 
