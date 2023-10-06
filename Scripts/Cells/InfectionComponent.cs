@@ -6,14 +6,17 @@ namespace Cells
     public class InfectionComponent : MonoBehaviour
     {
         public bool infected;
-        public float infectionDuration = 10f;
-        public GameObject enemyPrefab;
+        public float infectionDuration = 3f;
+        private GameObject enemyPrefab;
         private float infectionTime;
         private SpriteRenderer _spriteRenderer;
         private Color defaultEffect;
-        private Color infectedEffect = Color.green;
-        private int infectionSpawn;
-        
+        private Color infectedEffect = Color.yellow;
+        public int infectionResist = 30;
+        public GameObject infectedCellPrefab;
+        private BaseCell _baseCell;
+        public Enemy.enumVirusType virusType;
+
         void Start()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -21,8 +24,9 @@ namespace Cells
             {
                 defaultEffect = _spriteRenderer.color;
             }
-            // scalable 
-            infectionSpawn = 2;
+
+            _baseCell = GetComponent<BaseCell>();
+            _baseCell.moveSpeed = Mathf.Floor(_baseCell.moveSpeed * 0.5f);
         }
 
         public void StartInfection()
@@ -43,11 +47,9 @@ namespace Cells
             {
                 infected = false;
                 _spriteRenderer.color = defaultEffect;
-                Destroy(gameObject);
-                for (int i = 0; i < infectionSpawn; i++)
-                {
-                    Instantiate(enemyPrefab, transform.position, quaternion.identity);
-                }
+                Destroy(transform.gameObject);
+                GameObject infectedCell = Instantiate(infectedCellPrefab, transform.position, quaternion.identity);
+                infectedCell.GetComponent<InfectionSpawner>().enemyType = virusType;
             }
         }
     }

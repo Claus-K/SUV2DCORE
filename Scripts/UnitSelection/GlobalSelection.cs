@@ -52,11 +52,11 @@ namespace UnitSelection
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
             if (hit.collider != null &&
-                hit.collider.gameObject.CompareTag("Player")) // Check if the raycast hit something
+                hit.collider.gameObject.CompareTag("CellDef")) // Check if the raycast hit something
             {
                 // Debug.Log("Raycast hit: " + hit.collider.gameObject.name); // Display name of hit object
 
-                if (hit.collider.CompareTag("Player"))
+                if (hit.collider.CompareTag("CellDef"))
                 {
                     SelectDictionary.Instance.AddSelected(hit.collider.gameObject);
                 }
@@ -86,7 +86,7 @@ namespace UnitSelection
             Vector2 boxSize = new Vector2(Mathf.Abs(boxEnd.x - boxStart.x), Mathf.Abs(boxEnd.y - boxStart.y));
 
             Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, 0);
-            foreach (var hit in hits.Where(hit =>hit.CompareTag("Player")))
+            foreach (var hit in hits.Where(hit =>hit.CompareTag("CellDef")))
             {
                 SelectDictionary.Instance.AddSelected(hit.gameObject);
             }
