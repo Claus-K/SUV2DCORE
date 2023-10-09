@@ -1,6 +1,6 @@
 using Cells;
+using Combat;
 using PathFinder;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,43 +13,56 @@ namespace Enemy
         public float moveSpeed = 2.0f;
 
         private Rigidbody2D rb;
-        private float dt;
-        public enumVirusType A;
 
         private Target objTarget;
-        private string searchTag;
+        private string[] searchTag = { "CellDef", "Cell" };
         private Collider2D[] overlapResults = new Collider2D[3];
         private Transform target;
         private bool targetCondition;
         private float sightRange;
 
         private MovementUtility mov;
-        private bool hitCollider;
+        private bool hasHit;
 
         public int infectFactor = 100;
         public GameObject effectAntiBody;
+
+        private CombatComponent _cb;
+        private float dt;
+        private float attackRate = 1f;
+
+        private void Awake()
+        {
+            _cb = GetComponent<CombatComponent>();
+            _cb.Life = 50;
+            _cb.Damage = 10;
+        }
 
         private void Start()
         {
             rb = GetComponent<Rigidbody2D>();
             objTarget = new Target();
-            searchTag = "CellDef";
             target = objTarget.GetTarget(detectionRange, overlapResults, transform, searchTag);
             sightRange = detectionRange;
-            dt = Time.time;
             mov = new MovementUtility();
+            dt = Time.time;
         }
 
         private void FixedUpdate()
         {
             if (objTarget.isTargetValid(target, transform, sightRange))
             {
-                mov.MoveTowards(transform, target, rb, moveSpeed, hitCollider);
+                mov.MoveTowards(transform, target, rb, moveSpeed, hasHit);
+                if (hasHit && Time.time - dt > attackRate)
+                {
+                    AttackTarget(target, _cb.Damage);
+                    dt = Time.time;
+                }
             }
             else
             {
                 mov.WanderRandomly(transform, rb, moveSpeed);
-                hitCollider = false;
+                hasHit = false;
                 target = objTarget.GetTarget(detectionRange, overlapResults, transform, searchTag);
             }
         }
@@ -59,14 +72,15 @@ namespace Enemy
             if (other.transform == target)
             {
                 var it = other.GetComponent<InfectionComponent>();
-                hitCollider = true;
+                hasHit = true;
                 if (it == null) return;
                 if (it.infected) return;
                 float randomValue = Random.Range(0, infectFactor);
-                if (!(randomValue > it.infectionResist)) return;
+                if (!(randomValue > it.InfectionResist)) return;
                 var enemyId = transform.GetComponent<EnemyVirusIdentifier>();
                 it.virusType = enemyId.Type;
                 it.StartInfection();
+                Destroy(gameObject);
             }
 
             if (other.transform.CompareTag("AntiBody"))
@@ -81,7 +95,16 @@ namespace Enemy
         {
             if (other.transform == target)
             {
-                hitCollider = false;
+                hasHit = false;
+            }
+        }
+
+        public void AttackTarget(Transform target, float amount)
+        {
+            var _cb_target = target.GetComponent<CombatComponent>();
+            if (_cb_target != null)
+            {
+                _cb_target.TakeDamage(amount);
             }
         }
     }

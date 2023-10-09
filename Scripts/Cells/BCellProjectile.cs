@@ -1,3 +1,4 @@
+using Combat;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace Cells
     {
         private float lifeTime = 5f;
         private float dt;
+        private float damage = 10f;
         
         private void Start()
         {
@@ -26,6 +28,11 @@ namespace Cells
         {
             if (other.transform.CompareTag("Virus"))
             {
+                var _cb = other.gameObject.GetComponent<CombatComponent>();
+                if (_cb != null)
+                {
+                    _cb.TakeDamage(damage);
+                }
                 Destroy(transform.gameObject);
             }
         }

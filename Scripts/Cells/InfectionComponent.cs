@@ -12,9 +12,15 @@ namespace Cells
         private SpriteRenderer _spriteRenderer;
         private Color defaultEffect;
         private Color infectedEffect = Color.yellow;
-        public int infectionResist = 30;
+        
+        private int infectionResist = 30;
+        public int InfectionResist
+        {
+            get => infectionResist;
+            set => infectionResist = value;
+        }
+
         public GameObject infectedCellPrefab;
-        private BaseCell _baseCell;
         public Enemy.enumVirusType virusType;
 
         void Start()
@@ -25,8 +31,8 @@ namespace Cells
                 defaultEffect = _spriteRenderer.color;
             }
 
-            _baseCell = GetComponent<BaseCell>();
-            _baseCell.moveSpeed = Mathf.Floor(_baseCell.moveSpeed * 0.5f);
+            // _baseCell = GetComponent<BaseCell>();
+            // _baseCell.moveSpeed = Mathf.Floor(_baseCell.moveSpeed * 0.5f);
         }
 
         public void StartInfection()

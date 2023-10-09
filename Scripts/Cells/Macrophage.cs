@@ -1,64 +1,56 @@
-using PathFinder;
 using UnityEngine;
 
 namespace Cells
 {
     public class Macrophage : MonoBehaviour
     {
+        private WhiteCell white;
+
         // Start is called before the first frame update
-        public float detectionRange = 5.0f;
-        public float moveSpeed = 2.0f;
-
-        private Rigidbody2D rb;
         private float dt;
-        private float sightRange;
-
-        public InfectionComponent infection;
-
-        private Target objTarget;
-        private string searchTag;
-        private Collider2D[] overlapResults = new Collider2D[3];
-        private Transform target;
-
-        private MovementUtility mov;
         private bool hitCollider;
 
         // macrophage variables
         private int enemiesEaten;
         private int max_enemies_eaten = 20;
 
+        private void Awake()
+        {
+            white = new WhiteCell(10, 10, 2, 250f)
+            {
+                _infection = GetComponent<InfectionComponent>(),
+                _rb = GetComponent<Rigidbody2D>()
+            };
+            white.damage = 20;
+        }
+
         private void Start()
         {
-            rb = GetComponent<Rigidbody2D>();
-            infection = GetComponent<InfectionComponent>();
-            // if resist not informed default value is 30
-            infection.infectionResist = 75;
-            objTarget = new PathFinder.Target();
-            searchTag = "Virus";
-            target = objTarget.GetTarget(detectionRange, overlapResults, transform, searchTag);
-            sightRange = detectionRange;
-            mov = new MovementUtility();
+            // if resist not informed is set to 30
+            white._infection.InfectionResist = 80;
+            dt = Time.time;
         }
 
         private void FixedUpdate()
         {
-            if (objTarget.isTargetValid(target, transform, sightRange))
+            if (white._target.isTargetValid(white.target, transform, white.sightRange))
             {
-                mov.MoveTowards(transform, target, rb, moveSpeed, hitCollider);
+                white.mov.MoveTowards(transform, white.target, white._rb, white.moveSpeed, hitCollider);
                 // is Target valid
                 // if (!objTarget.Reevaluate(Time.time, dt, reevaluationTime)) return;
-                // target = null;
+                // core.target = null;
                 // dt = Time.time;
             }
             else
             {
                 hitCollider = false;
-                target = objTarget.GetTarget(detectionRange, overlapResults, transform, searchTag);
+                white.target =
+                    white._target.GetTarget(white.detectionRange, white.overlapResults, transform, white.searchTag);
             }
 
-            if (infection.infected)
+            if (white._infection.infected)
             {
-                infection.EndInfection();
+                white._infection.EndInfection();
             }
 
             if (enemiesEaten > 0)
@@ -87,13 +79,13 @@ namespace Cells
                 }
             }
 
-            if (target == null) return;
-            hitCollider = other.transform == target;
+            if (white.target == null) return;
+            hitCollider = other.transform == white.target;
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.transform == target)
+            if (other.transform == white.target)
             {
                 hitCollider = false;
             }

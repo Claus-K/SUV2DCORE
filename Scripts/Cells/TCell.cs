@@ -1,44 +1,45 @@
+using Combat;
 using UnityEngine;
 
 namespace Cells
 {
-    public class BCell : MonoBehaviour
+    public class TCell : MonoBehaviour
     {
         public WhiteCell white;
-
-        // Shooting related attributes
-        public GameObject projectilePrefab;
         public float attackRate = 1f;
-        public float launchForce = 3f;
-        private float minimumDistance = 7;
         private float dt;
-
         private bool hasHit;
+        private CombatComponent _cb;
 
         private void Awake()
         {
-            white = new WhiteCell(10, 10, 2, 100f)
+            white = new WhiteCell(10, 10, 2, 150f)
             {
                 _infection = GetComponent<InfectionComponent>(),
                 _rb = GetComponent<Rigidbody2D>()
             };
+
+            _cb = GetComponent<CombatComponent>();
+            _cb.Life = white.life;
+            _cb.Damage = 10;
         }
 
-        private void Start()
+        void Start()
         {
             // if resist not informed is set to 30
+            white._infection.InfectionResist = 60;
             dt = Time.time;
         }
 
-        private void FixedUpdate()
+        // Update is called once per frame
+        void FixedUpdate()
         {
-            if (white._target.isTargetValid(white.target, transform, white.sightRange))
+            if (white._target.isTargetValid(white.target, transform, white.detectionRange))
             {
-                white.mov.RangeMoveTowards(transform, white.target, white._rb, white.moveSpeed, hasHit, minimumDistance);
-
-                if (Time.time - dt > attackRate)
+                white.mov.MoveTowards(transform, white.target, white._rb, white.moveSpeed, hasHit);
+                if (hasHit && Time.time - dt > attackRate)
                 {
-                    ShootAtTarget(white.target);
+                    white.AttackTarget(white.target, _cb.Damage);
                     dt = Time.time;
                 }
             }
@@ -66,15 +67,6 @@ namespace Cells
         private void OnTriggerExit2D(Collider2D other)
         {
             hasHit = false;
-        }
-
-        private void ShootAtTarget(Transform target)
-        {
-            var position = transform.position;
-            var projectile = Instantiate(projectilePrefab, position, Quaternion.identity);
-            Vector2 direction = (target.position - position).normalized;
-            var projectileRB = projectile.GetComponent<Rigidbody2D>();
-            projectileRB.velocity = direction * launchForce;
         }
     }
 }

@@ -18,6 +18,21 @@ namespace PathFinder
             Vector2 moveAmount = direction * (moveSpeed * Time.deltaTime);
             rb.MovePosition(rb.position + moveAmount);
         }
+        
+        public void RangeMoveTowards(Transform currentTransform, Transform targetTransform, Rigidbody2D rb, float moveSpeed, bool stopMoving, float minimumDistance)
+        {
+            if (!targetTransform) return;
+            if (stopMoving) return;
+
+            float currentDistance = Vector2.Distance(currentTransform.position, targetTransform.position);
+
+            if (currentDistance > minimumDistance)
+            {
+                Vector2 direction = (targetTransform.position - currentTransform.position).normalized;
+                Vector2 moveAmount = direction * (moveSpeed * Time.deltaTime);
+                rb.MovePosition(rb.position + moveAmount);
+            }
+        }
 
         public void MoveTowardsVirus(Transform currentTransform, Transform targetTransform, Rigidbody2D rb,
             float moveSpeed, bool stopMovement)
