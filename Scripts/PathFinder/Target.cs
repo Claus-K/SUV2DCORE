@@ -30,5 +30,10 @@ namespace PathFinder
             if (target == null) return false;
             return Vector2.Distance(ownTransform.position, target.position) < distance;
         }
+
+        public bool isTargetValid(Transform target)
+        {
+            return target != null;
+        }
     }
 }

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1978396580094224753}
   - component: {fileID: 2881381760171838678}
   - component: {fileID: -6216042935347965130}
+  - component: {fileID: 7249590708316880076}
   m_Layer: 0
   m_Name: Macrophage
   m_TagString: CellDef
@@ -230,6 +231,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeBar: {fileID: 1713297564475751940}
   lifeColor: {fileID: 4452683334398855617}
+--- !u!114 &7249590708316880076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6559249427799602566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6f3ac6da67d6d5469f9108dc5fdea7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
 --- !u!1001 &6439940666327066899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -330,6 +344,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3923652601063932996, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7909473979347711737, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
       propertyPath: m_Name
       value: SliderLifeBar
@@ -337,14 +355,35 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6863070880526759385, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5184964855690437359}
   m_SourcePrefab: {fileID: 100100000, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
+--- !u!1 &459865725572193482 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6863070880526759385, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
+  m_PrefabInstance: {fileID: 6439940666327066899}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5184964855690437359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459865725572193482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4fdb763d9b2b9b439257e0ee06d408f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LifeBar: {fileID: 1713297564475751940}
 --- !u!114 &1713297564475751940 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5663726115074217751, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
   m_PrefabInstance: {fileID: 6439940666327066899}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 459865725572193482}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}

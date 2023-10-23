@@ -25,13 +25,13 @@ namespace Combat
         {
             maxLife = Life;
             UpdateLifeBar();
-            _camera = UnityEngine.Camera.main;
+            // _camera = UnityEngine.Camera.main;
         }
 
-        private void FixedUpdate()
-        {
-            lifeBar.transform.rotation = _camera.transform.rotation;
-        }
+        // private void FixedUpdate()
+        // {
+        //     lifeBar.transform.rotation = _camera.transform.rotation;
+        // }
 
         public void TakeDamage(float amount)
         {
@@ -49,7 +49,7 @@ namespace Combat
             Destroy(gameObject);
         }
 
-        void UpdateLifeBar()
+        private void UpdateLifeBar()
         {
             float lifePercentage = Life / maxLife;
             if (Life >= maxLife)

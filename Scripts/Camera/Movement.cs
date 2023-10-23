@@ -5,8 +5,8 @@ namespace Camera
     public class Movement : MonoBehaviour
     {
         public float baseSpeed = 2.0f;
-        private float _maxSpeed = 10.0f;
-        private float _acceleration = 2.5f;
+        private float maxSpeed = 10.0f;
+        private float acceleration = 2.5f;
         public float borderThickness = 10f;
 
         private float _currentSpeed;
@@ -61,8 +61,8 @@ namespace Camera
             movement.Normalize();
 
             _currentSpeed = isMoving
-                ? Mathf.Clamp(_currentSpeed + _acceleration * Time.deltaTime, baseSpeed, _maxSpeed)
-                : Mathf.Clamp(_currentSpeed - _acceleration * Time.deltaTime, baseSpeed, _maxSpeed);
+                ? Mathf.Clamp(_currentSpeed + acceleration * Time.deltaTime, baseSpeed, maxSpeed)
+                : Mathf.Clamp(_currentSpeed - acceleration * Time.deltaTime, baseSpeed, maxSpeed);
 
             transform.position += movement * (_currentSpeed * Time.deltaTime);
         }

@@ -11,7 +11,7 @@ namespace Cells
         public Enemy.enumVirusType enemyType;
         private GameObject enemyPrefab;
 
-        void Start()
+        private void Start()
         {
             dt = Time.time;
 
@@ -24,7 +24,7 @@ namespace Cells
             SpawnEnemy();
         }
 
-        void Update()
+        private void FixedUpdate()
         {
             if (Time.time - dt > spawnRate)
             {

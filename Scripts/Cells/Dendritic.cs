@@ -1,14 +1,20 @@
+using System.Linq;
+using Combat;
 using PathFinder;
+using TMPro;
+using UIElements;
 using UnityEngine;
 
 namespace Cells
 {
     public class Dendritic : MonoBehaviour
     {
-        private BaseCell core;
+        private WhiteCell white;
+        private float dt;
+        private float attackRate = 1f;
 
         private Collider2D[] overlapResults = new Collider2D[3];
-        private string[] searchTag = { "Virus", "Bacteria", "Parasite" };
+        private string[] searchTag;
 
         private Rigidbody2D _rb;
         private Target _target;
@@ -18,46 +24,87 @@ namespace Cells
 
         private MovementUtility mov;
 
+        private Transform turnTarget;
+        private CombatComponent _cb;
+        private int rnaPoints;
+        public TMP_InputField rnaInfo;
+        public RnaHandler _rnaHandler;
+
 
         private void Awake()
         {
-            core = new BaseCell(6, 6, 2, 150f)
+            white = new WhiteCell(6, 6, 2, 150f)
             {
                 _infection = GetComponent<InfectionComponent>()
             };
+            searchTag = white.searchTag.Concat(new[] { "VirusCorpse" }).ToArray();
+
+            _cb = GetComponent<CombatComponent>();
+            _cb.Life = white.life;
+            _cb.Damage = 10;
+
+            _rnaHandler = rnaInfo.GetComponent<RnaHandler>();
         }
 
-        void Start()
+        private void Start()
         {
             _rb = GetComponent<Rigidbody2D>();
             _target = new Target();
-            core._infection.InfectionResist = 60;
+            white._infection.InfectionResist = 100;
+            dt = Time.time;
         }
 
         // Update is called once per frame
-        void Update()
+        private void FixedUpdate()
         {
-            if (_target.isTargetValid(target, transform, core.sightRange))
+            if (turnTarget == null)
             {
-                mov.MoveTowards(transform, target, _rb, core.moveSpeed, hasHit);
+                if (_target.isTargetValid(target, transform, white.sightRange))
+                {
+                    mov.MoveTowards(transform, target, _rb, white.moveSpeed, hasHit);
+                    if (hasHit && Time.time - dt > attackRate)
+                    {
+                        white.AttackTarget(white.target, _cb.Damage);
+                        dt = Time.time;
+                    }
+                }
+                else
+                {
+                    hasHit = false;
+                    target = _target.GetTarget(white.detectionRange, overlapResults, transform, searchTag);
+                }
             }
             else
             {
-                hasHit = false;
-                target = _target.GetTarget(core.detectionRange, overlapResults, transform, searchTag);
+                if (_target.isTargetValid(turnTarget))
+                {
+                    mov.MoveTowards(transform, turnTarget, _rb, white.moveSpeed, hasHit);
+                    if (hasHit && Time.time - dt > attackRate)
+                    {
+                        _rnaHandler.SpendRna(10);
+                        dt = Time.time;
+                        // TODO turnTarget = null;
+                    }
+                }
             }
 
-            if (core._infection.infected)
+            if (white._infection.infected)
             {
-                core._infection.EndInfection();
+                white._infection.EndInfection();
             }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (target != null)
+            if (target != null && turnTarget == null)
             {
                 hasHit = other.transform == target;
+                return;
+            }
+
+            if (turnTarget != null)
+            {
+                hasHit = other.transform == turnTarget;
             }
         }
 
