@@ -11,6 +11,8 @@ namespace Cells
         private bool hasHit;
         private CombatComponent _cb;
 
+        private UtilityCells _utilityCells;
+
         private void Awake()
         {
             white = new WhiteCell(10, 10, 2, 150f)
@@ -22,6 +24,8 @@ namespace Cells
             _cb = GetComponent<CombatComponent>();
             _cb.Life = white.life;
             _cb.Damage = 10;
+
+            _utilityCells = GetComponent<UtilityCells>();
         }
 
         void Start()
@@ -53,6 +57,11 @@ namespace Cells
             if (white._infection.infected)
             {
                 white._infection.EndInfection();
+            }
+
+            if (_utilityCells.turn)
+            {
+                _utilityCells.TurnCell(transform);
             }
         }
 

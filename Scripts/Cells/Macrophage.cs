@@ -1,3 +1,4 @@
+using Combat;
 using UnityEngine;
 
 namespace Cells
@@ -8,11 +9,14 @@ namespace Cells
 
         // Start is called before the first frame update
         private float dt;
-        private bool hitCollider;
+        private bool hasHit;
+        public float attackRate = 1f;
 
         // macrophage variables
         private int enemiesEaten;
         private int max_enemies_eaten = 20;
+
+        private CombatComponent _cb;
 
         private void Awake()
         {
@@ -21,7 +25,10 @@ namespace Cells
                 _infection = GetComponent<InfectionComponent>(),
                 _rb = GetComponent<Rigidbody2D>()
             };
-            white.damage = 20;
+            _cb = GetComponent<CombatComponent>();
+            _cb.Life = white.life;
+            _cb.Damage = 25;
+            
         }
 
         private void Start()
@@ -35,15 +42,16 @@ namespace Cells
         {
             if (white._target.isTargetValid(white.target, transform, white.sightRange))
             {
-                white.mov.MoveTowards(transform, white.target, white._rb, white.moveSpeed, hitCollider);
-                // is Target valid
-                // if (!objTarget.Reevaluate(Time.time, dt, reevaluationTime)) return;
-                // core.target = null;
-                // dt = Time.time;
+                white.mov.MoveTowards(transform, white.target, white._rb, white.moveSpeed, hasHit);
+                if (hasHit && Time.time - dt > attackRate)
+                {
+                    white.AttackTarget(white.target, _cb.Damage);
+                    dt = Time.time;
+                }
             }
             else
             {
-                hitCollider = false;
+                hasHit = false;
                 white.target =
                     white._target.GetTarget(white.detectionRange, white.overlapResults, transform, white.searchTag);
             }
@@ -80,14 +88,14 @@ namespace Cells
             }
 
             if (white.target == null) return;
-            hitCollider = other.transform == white.target;
+            hasHit = other.transform == white.target;
         }
 
         private void OnTriggerExit(Collider other)
         {
             if (other.transform == white.target)
             {
-                hitCollider = false;
+                hasHit = false;
             }
         }
     }

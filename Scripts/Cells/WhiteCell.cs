@@ -2,6 +2,7 @@ using Combat;
 using PathFinder;
 using UnityEngine;
 
+
 namespace Cells
 {
     public class WhiteCell : BaseCell
@@ -17,7 +18,7 @@ namespace Cells
         public Target _target = new();
         public Transform target;
 
-        public float damage;
+        private UtilityCells _utilityCells;
 
         public WhiteCell(float detectionRange, float sightRange, float moveSpeed, float life = 50) : base(
             detectionRange, sightRange,
