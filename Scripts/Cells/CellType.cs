@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Cells
 {
     public enum enumCellType
@@ -8,6 +6,7 @@ namespace Cells
         BCell,
         TCell,
         Dendritic,
-        Memory
+        Memory,
+        Blood
     }
 }

@@ -1,15 +1,18 @@
+using Enemy;
 using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 
 namespace Cells
 {
     public class InfectionSpawner : MonoBehaviour
     {
-        [SerializeField] private Enemy.EnemyVirusDatabase _enemyVirusDatabase;
-        private float spawnRate = 10f;
+        [SerializeField] private EnemyVirusDatabase _enemyVirusDatabase;
+        private float spawnRate = 0.5f;
         private float dt;
-        public Enemy.enumVirusType enemyType;
+        public enumVirusType enemyType;
         private GameObject enemyPrefab;
+        private int amount = 3;
 
         private void Start()
         {
@@ -21,6 +24,7 @@ namespace Cells
                 Debug.LogError("No Prefab found : " + enemyType);
                 Destroy(gameObject);
             }
+
             SpawnEnemy();
         }
 
@@ -30,14 +34,19 @@ namespace Cells
             {
                 SpawnEnemy();
                 dt = Time.time;
+                amount -= 1;
+                if (amount == 0)
+                {
+                    Destroy(gameObject);
+                }
             }
         }
 
         private void SpawnEnemy()
         {
-            var spawn = Instantiate(enemyPrefab, transform.position, quaternion.identity);
-            var rb = spawn.GetComponent<Rigidbody2D>();
-            rb.AddForce(spawn.transform.up * 2, ForceMode2D.Impulse);
+            Instantiate(enemyPrefab, transform.position, quaternion.identity);
+            // var rb = spawn.GetComponent<Rigidbody2D>();
+            // rb.AddForce(spawn.transform.up * 2, ForceMode2D.Impulse);
         }
     }
 }

@@ -50,7 +50,7 @@ namespace UnitSelection
         {
             Vector2 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-
+            SelectDictionary.Instance.DeselectAll();
             if (hit.collider != null &&
                 hit.collider.gameObject.CompareTag("CellDef")) // Check if the raycast hit something
             {

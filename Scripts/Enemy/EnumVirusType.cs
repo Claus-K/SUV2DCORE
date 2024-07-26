@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Enemy
 {
     public enum enumVirusType {

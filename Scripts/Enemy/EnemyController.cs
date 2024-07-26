@@ -14,7 +14,7 @@ namespace Enemy
 
         private Rigidbody2D rb;
 
-        private Target objTarget;
+        private TargetService _objTargetService;
         private string[] searchTag = { "CellDef", "Cell" };
         private Collider2D[] overlapResults = new Collider2D[3];
         private Transform target;
@@ -34,15 +34,15 @@ namespace Enemy
         private void Awake()
         {
             _cb = GetComponent<CombatComponent>();
-            _cb.Life = 50;
+            _cb.life = 50;
             _cb.Damage = 10;
         }
 
         private void Start()
         {
             rb = GetComponent<Rigidbody2D>();
-            objTarget = new Target();
-            target = objTarget.GetTarget(detectionRange, overlapResults, transform, searchTag);
+            _objTargetService = new TargetService();
+            target = _objTargetService.FindTarget(detectionRange, overlapResults, transform, searchTag);
             sightRange = detectionRange;
             mov = new MovementUtility();
             dt = Time.time;
@@ -50,7 +50,7 @@ namespace Enemy
 
         private void FixedUpdate()
         {
-            if (objTarget.isTargetValid(target, transform, sightRange))
+            if (_objTargetService.IsTargetValid(target, transform, sightRange))
             {
                 mov.MoveTowards(transform, target, rb, moveSpeed, hasHit);
                 if (hasHit && Time.time - dt > attackRate)
@@ -63,7 +63,7 @@ namespace Enemy
             {
                 mov.WanderRandomly(transform, rb, moveSpeed);
                 hasHit = false;
-                target = objTarget.GetTarget(detectionRange, overlapResults, transform, searchTag);
+                target = _objTargetService.FindTarget(detectionRange, overlapResults, transform, searchTag);
             }
         }
 

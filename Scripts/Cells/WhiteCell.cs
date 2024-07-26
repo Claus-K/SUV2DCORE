@@ -1,4 +1,3 @@
-using Combat;
 using PathFinder;
 using UnityEngine;
 
@@ -8,14 +7,15 @@ namespace Cells
     public class WhiteCell : BaseCell
     {
         // movement variables
-        public Rigidbody2D _rb;
+        public Rigidbody2D _rbody2D;
         public string[] searchTag = { "Virus", "Bacteria", "Parasite" };
 
-        public MovementUtility mov = new();
+        public MovementUtility movmentUtilitys = new();
+        public PathAgent pathAgent = new();
 
         // target variables
-        public Collider2D[] overlapResults = new Collider2D[3];
-        public Target _target = new();
+        public Collider2D[] overlapResults = new Collider2D[50];
+        public TargetService TargetServiceScript = new();
         public Transform target;
 
         private UtilityCells _utilityCells;
@@ -24,21 +24,6 @@ namespace Cells
             detectionRange, sightRange,
             moveSpeed, life)
         {
-        }
-
-        public void AttackTarget(Transform target, float amount)
-        {
-            if (target == null)
-            {
-                Debug.Log("Target is NULL");
-                return;
-            }
-
-            var _cb = target.GetComponent<CombatComponent>();
-            if (_cb != null)
-            {
-                _cb.TakeDamage(amount);
-            }
         }
     }
 }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b36aa6b3db3b8bd40b53c51501a08ab7, type: 3}
+  m_Name: ResourceDatabaseRna
+  m_EditorClassIdentifier: 
+  mappings:
+  - type: 0
+    prefab: {fileID: 5601354654060756159, guid: 1254992464d038e4094d2693b36ff324, type: 3}
+  - type: 1
+    prefab: {fileID: 860479344915878120, guid: 970d0130bf91ace40a780337e11be231, type: 3}
+  - type: 2
+    prefab: {fileID: 6233917868821008524, guid: 4954b8aeab514b649ae9596d5ef4a279, type: 3}

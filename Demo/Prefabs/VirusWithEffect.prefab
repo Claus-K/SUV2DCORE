@@ -317,6 +317,7 @@ GameObject:
   - component: {fileID: 4049461456665503575}
   - component: {fileID: 8876173957787125974}
   - component: {fileID: 7785352630754470829}
+  - component: {fileID: 126013332031316528}
   m_Layer: 0
   m_Name: VirusWithEffect
   m_TagString: Virus
@@ -553,6 +554,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeBar: {fileID: 413077876226244352}
   lifeColor: {fileID: 3438019803597670597}
+--- !u!114 &126013332031316528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8508593203190813603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 920ae966f9af2a54bb14a0c7db64a1b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resource: {fileID: 11400000, guid: 7244fb8083f04a141a07703458572a4d, type: 2}
 --- !u!1 &8917776856406046864
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,6 +754,14 @@ PrefabInstance:
     - target: {fileID: 3923652601063932996, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5663726115074217751, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
+      propertyPath: m_Value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6863070880526759385, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7909473979347711737, guid: b11393b6d4112cc4a8262e8e2466d748, type: 3}
       propertyPath: m_Name

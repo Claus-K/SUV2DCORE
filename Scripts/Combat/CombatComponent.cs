@@ -5,14 +5,12 @@ namespace Combat
 {
     public class CombatComponent : MonoBehaviour
     {
-        public float Life { get; set; }
-        private float damage;
+        [SerializeField]
+        public float life;
 
-        public float Damage
-        {
-            get => damage;
-            set => damage = value;
-        }
+        
+
+        public float Damage { get; set; }
 
         private float maxLife;
 
@@ -23,7 +21,7 @@ namespace Combat
 
         private void Start()
         {
-            maxLife = Life;
+            maxLife = life;
             UpdateLifeBar();
             // _camera = UnityEngine.Camera.main;
         }
@@ -35,12 +33,12 @@ namespace Combat
 
         public void TakeDamage(float amount)
         {
-            Life = Mathf.Max(Life - amount, 0);
-            if (Life == 0)
+            life = Mathf.Max(life - amount, 0);
+            if (life == 0)
             {
                 Die();
             }
-
+            // Debug.Log($"{life}");
             UpdateLifeBar();
         }
 
@@ -51,10 +49,10 @@ namespace Combat
 
         private void UpdateLifeBar()
         {
-            float lifePercentage = Life / maxLife;
-            if (Life >= maxLife)
+            var lifePercentage = life / maxLife;
+            if (life >= maxLife)
             {
-                Life = maxLife;
+                life = maxLife;
                 lifeBar.transform.gameObject.SetActive(false);
             }
             else
@@ -82,4 +80,6 @@ namespace Combat
             lifeBar.value = Mathf.Max(lifePercentage, 0);
         }
     }
+    
+    
 }

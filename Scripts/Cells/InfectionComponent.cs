@@ -11,7 +11,7 @@ namespace Cells
         private float infectionTime;
         private SpriteRenderer _spriteRenderer;
         private Color defaultEffect;
-        private Color infectedEffect = Color.yellow;
+        private readonly Color infectedEffect = Color.yellow;
         
         private int infectionResist = 30;
         public int InfectionResist

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cells;
 using UnityEngine;
 
 namespace UnitSelection
@@ -7,64 +8,42 @@ namespace UnitSelection
     {
         private UnityEngine.Camera _camera;
 
-        // private GameObject _selectedUnit;
-
-        private List<GameObject> _selectedUnits = new List<GameObject>();
-
-        // Start is called before the first frame update
         void Start()
         {
             _camera = UnityEngine.Camera.main;
-
         }
 
-        // Update is called once per frame
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))  // 0 is the left mouse button
+            if (Input.GetMouseButtonDown(0)) // Left mouse button
             {
                 Vector2 mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
                 RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
-                // If we hit something
                 if (hit.collider != null && hit.collider.CompareTag("Player"))
                 {
                     GameObject clickedUnit = hit.collider.gameObject;
+                    int id = clickedUnit.GetInstanceID();
 
-                    // If Shift/Ctrl is not held down, clear current selection
                     if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl))
                     {
-                        DeselectAllUnits();
+                        SelectDictionary.Instance.DeselectAll();
                     }
 
-                    // Toggle the selection status of the clicked unit
-                    if (_selectedUnits.Contains(clickedUnit))
+                    if (SelectDictionary.Instance.selectUnits.ContainsKey(id))
                     {
-                        _selectedUnits.Remove(clickedUnit);
-                        clickedUnit.GetComponent<SpriteRenderer>().color = Color.white; // revert color
+                        SelectDictionary.Instance.Deselect(id);
                     }
                     else
                     {
-                        _selectedUnits.Add(clickedUnit);
-                        clickedUnit.GetComponent<SpriteRenderer>().color = Color.red;
+                        SelectDictionary.Instance.AddSelected(clickedUnit);
                     }
                 }
-                // If we did not hit any unit
                 else if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl))
                 {
-                    DeselectAllUnits();
+                    SelectDictionary.Instance.DeselectAll();
                 }
             }
         }
-        
-        void DeselectAllUnits()
-        {
-            foreach (GameObject unit in _selectedUnits)
-            {
-                unit.GetComponent<SpriteRenderer>().color = Color.white;
-            }
-            _selectedUnits.Clear();
-        }
-
     }
 }

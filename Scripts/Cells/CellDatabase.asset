@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2863dd03e09f0a44ace124167bc334d, type: 3}
   m_Name: CellDatabase
   m_EditorClassIdentifier: 
-  cells:
-  - type: 4
-  - type: 3
-  - type: 2
-  - type: 1
+  mappings:
   - type: 0
+    prefab: {fileID: 9022264248775812567, guid: 18136f277cb144b408d40514084534d1, type: 3}
+  - type: 1
+    prefab: {fileID: 4396017049673031190, guid: fcd2afa6ff3206a4f93bd598d5731409, type: 3}
+  - type: 5
+    prefab: {fileID: 1413254526512377037, guid: fcd2afa6ff3206a4f93bd598d5731409, type: 3}
+  - type: 2
+    prefab: {fileID: 5934397812109800678, guid: 5d067b4db487693448f53d36abe79652, type: 3}

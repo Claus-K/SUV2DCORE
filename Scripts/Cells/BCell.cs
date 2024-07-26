@@ -20,7 +20,7 @@ namespace Cells
             white = new WhiteCell(10, 10, 2, 100f)
             {
                 _infection = GetComponent<InfectionComponent>(),
-                _rb = GetComponent<Rigidbody2D>()
+                _rbody2D = GetComponent<Rigidbody2D>()
             };
         }
 
@@ -32,9 +32,9 @@ namespace Cells
 
         private void FixedUpdate()
         {
-            if (white._target.isTargetValid(white.target, transform, white.sightRange))
+            if (white.TargetServiceScript.IsTargetValid(white.target, transform, white.sightRange))
             {
-                white.mov.RangeMoveTowards(transform, white.target, white._rb, white.moveSpeed, hasHit, minimumDistance);
+                white.movmentUtilitys.RangeMoveTowards(transform, white.target, white._rbody2D, white.moveSpeed, hasHit, minimumDistance);
 
                 if (Time.time - dt > attackRate)
                 {
@@ -46,7 +46,7 @@ namespace Cells
             {
                 hasHit = false;
                 white.target =
-                    white._target.GetTarget(white.detectionRange, white.overlapResults, transform, white.searchTag);
+                    white.TargetServiceScript.FindTarget(white.detectionRange, white.overlapResults, transform, white.searchTag);
             }
 
             if (white._infection.infected)

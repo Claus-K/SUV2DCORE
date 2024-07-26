@@ -1,0 +1,44 @@
+{
+  "waves": [
+    {
+      "delay": 5,
+      "enemies": [
+        {
+          "type": "A",
+          "count": 5,
+          "side": "Right"
+        }
+      ]
+    },
+    {
+      "delay": 20,
+      "enemies": [
+        {
+          "type": "A",
+          "count": 10,
+          "side": "Left"
+        }
+      ]
+    },
+    {
+      "delay": 40,
+      "enemies": [
+        {
+          "type": "A",
+          "count": 15,
+          "side": "Up"
+        }
+      ]
+    },
+    {
+      "delay": 40,
+      "enemies": [
+        {
+          "type": "A",
+          "count": 15,
+          "side": "Down"
+        }
+      ]
+    }
+  ]
+}
